@@ -4,7 +4,7 @@ export function sameSecret(a,b){return !!a&&!!b&&a.length===b.length&&timingSafe
 export function emailPayload(job,env=process.env){
  const site=(env.SITE_URL||'https://thewtlst.com').replace(/\/$/,'');
  if(!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(site))throw new Error('Invalid SITE_URL');
- const from=env.EMAIL_FROM||'WTLST <hello@thewtlst.com>';
+ const from='WTLST <noreply@thewtlst.com>';
  if(!/^[^<>\r\n]*<[^<>\s]+@thewtlst\.com>$/.test(from)&&! /^[^<>\s]+@thewtlst\.com$/.test(from))throw new Error('EMAIL_FROM must use thewtlst.com');
  const member=String(job.member_number??'').padStart(6,'0');
  let subject,text,to=job.email;

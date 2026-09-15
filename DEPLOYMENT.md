@@ -14,13 +14,13 @@ Run the complete `WTLST_SETUP.sql` once in the Supabase SQL Editor as postgres. 
 
 ## Environment
 Vercel Production needs SUPABASE_URL, SUPABASE_ANON_KEY (publishable or legacy anon only), SUPABASE_SECRET_KEY (server only), RESEND_API_KEY, CRON_SECRET, SITE_OPERATOR and PRIVACY_CONTACT.
-Optional SITE_URL defaults to https://thewtlst.com; EMAIL_FROM defaults to WTLST <hello@thewtlst.com>; ADMIN_NOTIFICATION_EMAIL defaults to PRIVACY_CONTACT. Set SITE_URL to https://wtlst.vercel.app during testing until the custom domain is connected.
+Optional SITE_URL defaults to https://thewtlst.com; EMAIL_FROM defaults to WTLST <noreply@thewtlst.com>; ADMIN_NOTIFICATION_EMAIL defaults to PRIVACY_CONTACT. Set SITE_URL to https://wtlst.vercel.app during testing until the custom domain is connected.
 The public config endpoint fails closed on secret/service-role keys. Credentials never go in assets.json or the source archive.
 If a secret was previously returned by /api/config, revoke it in Supabase. Replacing the environment variable alone is insufficient. Redeploy after changing variables.
 
 ## Sign-in emails (required separately)
 Supabase Authentication → Emails → SMTP Settings:
-Enable custom SMTP. Host smtp.resend.com, port 465, username resend, password a Resend sending key, sender hello@thewtlst.com, sender name WTLST.
+Enable custom SMTP. Host smtp.resend.com, port 465, username resend, password a Resend sending key, sender noreply@thewtlst.com, sender name WTLST.
 Supabase's default email service restricts recipients and is not production delivery.
 Use the Magic Link template in AUTH_EMAIL.html; it includes {{ .Token }} as the eight-digit sign-in code. Email provider OTP length must be 8. Keep email confirmation enabled. Site URL: https://thewtlst.com; allow https://wtlst.vercel.app for testing. Preserve built-in auth rate limits.
 
