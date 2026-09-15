@@ -22,7 +22,7 @@ If a secret was previously returned by /api/config, revoke it in Supabase. Repla
 Supabase Authentication → Emails → SMTP Settings:
 Enable custom SMTP. Host smtp.resend.com, port 465, username resend, password a Resend sending key, sender hello@thewtlst.com, sender name WTLST.
 Supabase's default email service restricts recipients and is not production delivery.
-Use the Magic Link template in AUTH_EMAIL.html; it includes {{ .Token }} as the six-digit sign-in code. Email provider OTP length must be 6. Keep email confirmation enabled. Site URL: https://thewtlst.com; allow https://wtlst.vercel.app for testing. Preserve built-in auth rate limits.
+Use the Magic Link template in AUTH_EMAIL.html; it includes {{ .Token }} as the eight-digit sign-in code. Email provider OTP length must be 8. Keep email confirmation enabled. Site URL: https://thewtlst.com; allow https://wtlst.vercel.app for testing. Preserve built-in auth rate limits.
 
 ## Admin
 After the intended operator has verified their email, run the query in ADMIN_SETUP.sql. It targets the configured operator email explicitly and fails if there is no verified account. Never add a public admin-signup endpoint or use a frontend admin flag as authorization.
