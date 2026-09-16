@@ -14,10 +14,10 @@ export function emailPayload(job,env=process.env){
   text=`${subject}\n\nReview the private dashboard: ${site}/?view=admin\n\nApplication #${job.applicant_id}.`;
  }else if(job.kind==='admission'){
   subject=`You’re in. WTLST MEMBER ${member}`;
-  text=`You’re in.\n\nMEMBER ${member}\n\nOne invitation available. Choose well.\n\nView your membership: ${site}/?view=login\n\nWTLST membership is free.`;
+  text=`You’re in.\n\nMEMBER ${member}\n\nOne invitation available. Choose well.\n\nView your membership: ${site}/?view=login\n\nNo payment is required at this stage.`;
  }else{
   subject='You’re on the WTLST.';
-  text=`Your application is in.\n\nView your live position and get your referral link: ${site}/?view=login\n\nEvery verified referral improves your ranking score. Admission is not guaranteed.\n\nWTLST membership is free.`;
+  text=`Your application is in.\n\nView your live position and get your referral link: ${site}/?view=login\n\nEvery verified referral improves your ranking score. Admission is not guaranteed.\n\nNo payment is required at this stage.`;
  }
  if(!to||!/^\S+@\S+\.\S+$/.test(to))throw new Error('Missing email recipient configuration');
  return {from,to:[to],subject,text,...(env.PRIVACY_CONTACT?{reply_to:env.PRIVACY_CONTACT}:{})};
