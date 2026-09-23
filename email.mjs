@@ -1,4 +1,5 @@
 import {backendConfig,rpcClient} from './config.mjs';
+import {weeklyReport} from './growth.mjs';
 import {timingSafeEqual} from 'node:crypto';
 export function sameSecret(a,b){return !!a&&!!b&&a.length===b.length&&timingSafeEqual(Buffer.from(a),Buffer.from(b));}
 export function emailPayload(job,env=process.env){
@@ -8,7 +9,11 @@ export function emailPayload(job,env=process.env){
  if(!/^[^<>\r\n]*<[^<>\s]+@thewtlst\.com>$/.test(from)&&! /^[^<>\s]+@thewtlst\.com$/.test(from))throw new Error('EMAIL_FROM must use thewtlst.com');
  const member=String(job.member_number??'').padStart(6,'0');
  let subject,text,to=job.email;
- if(job.kind.startsWith('operator_')){
+ if(job.kind==='weekly_growth'){
+  to=env.ADMIN_NOTIFICATION_EMAIL||env.PRIVACY_CONTACT;subject='WTLST — Weekly Growth';text=weeklyReport(job.context);
+ }else if(job.kind==='invitation_reminder'){
+  subject='Your invitation remains.';text=`MEMBER ${member}\n\nYour invitation remains unused.\n\nChoose well.\n\nView your membership: ${site}/?view=login\n\nWTLST`;
+ }else if(job.kind.startsWith('operator_')){
   to=env.ADMIN_NOTIFICATION_EMAIL||env.PRIVACY_CONTACT;
   subject=job.kind==='operator_admission'?`WTLST: member ${member} admitted`:'WTLST: new application';
   text=`${subject}\n\nReview the private dashboard: ${site}/?view=admin\n\nApplication #${job.applicant_id}.`;
@@ -33,10 +38,15 @@ export async function deliver({token,cron=false,env=process.env,fetcher=fetch}){
   const me=await rpcClient(cfg,token,fetcher)('wtlst_me');
   if(!me.admin){if(!me.application)return {status:200,body:{sent:0,failed:0}};applicant=me.application.id;}
  }
- const jobs=await call('wtlst_email_claim',{p_applicant:applicant});let sent=0,failed=0;
+ if(cron)await call('wtlst_growth_schedule');
+ let sent=0,failed=0,skipped=0;const deadline=Date.now()+70000;
+ for(let batch=0;batch<(cron?12:1);batch++){
+ const jobs=await call('wtlst_email_claim',{p_applicant:applicant});if(!jobs.length)break;
  for(const job of jobs){
+  if(Date.now()>deadline){await call('wtlst_email_release',{p_id:job.id,p_lease:job.lease});continue;}
   try{
    const payload=await call('wtlst_email_prepare',{p_id:job.id,p_lease:job.lease,p_payload:job.payload||emailPayload(job,env)});
+   if(!payload){skipped++;continue;}
    const response=await fetcher('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`wtlst-${job.id}`},body:JSON.stringify(payload),signal:AbortSignal.timeout(10000)});
    if(!response.ok)throw new Error(`Email provider returned ${response.status}`);
    const result=await response.json();if(!result.id)throw new Error('Email provider returned no receipt');
@@ -47,5 +57,7 @@ export async function deliver({token,cron=false,env=process.env,fetcher=fetch}){
   }
   if(jobs.length>1)await new Promise(resolve=>setTimeout(resolve,550));
  }
- return {status:failed?502:200,body:{sent,failed}};
+  if(Date.now()>deadline)break;
+ }
+ return {status:failed?502:200,body:{sent,failed,skipped}};
 }
