@@ -1,7 +1,29 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "builds": [{"src": "server.mjs", "use": "@vercel/node", "config": {"includeFiles": ["assets.json"], "maxDuration": 120}}],
-  "routes": [{"src": "/(.*)", "dest": "/server.mjs"}],
-  "crons": [{"path": "/api/cron/emails", "schedule": "0 7 * * *"}]
+  "builds": [
+    {
+      "src": "server.mjs",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "assets.json",
+          "the-test.html"
+        ],
+        "maxDuration": 120
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.mjs"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/emails",
+      "schedule": "0 7 * * *"
+    }
+  ]
 }
