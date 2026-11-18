@@ -21,6 +21,14 @@ export async function handler(req,res){
    const result=await deliver({token,cron});return json(result.body,result.status);
   }
   if(req.method!=='GET'&&req.method!=='HEAD')return json({error:'Method not allowed'},405);
+  if(path==='/the-test'||path==='/the-test/'){
+   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
+   return res.end(req.method==='HEAD'?undefined:await readFile(new URL('./the-test.html',import.meta.url),'utf8'));
+  }
+  if(path==='/sitemap.xml'){
+   res.writeHead(200,{'Content-Type':'application/xml; charset=utf-8','Cache-Control':'public, max-age=3600'});
+   return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://thewtlst.com/</loc></url><url><loc>https://thewtlst.com/the-test</loc></url></urlset>');
+  }
   if(path==='/api/config')return json(publicConfig());
   if(path==='/robots.txt'){res.writeHead(200,{'Content-Type':'text/plain'});return res.end('User-agent: *\nDisallow: /api/\n');}
   const key=path==='/'?'/index.html':decodeURIComponent(path);
