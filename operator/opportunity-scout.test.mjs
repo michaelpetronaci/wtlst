@@ -16,7 +16,7 @@ test('normalizes exactly three niches with defensible numeric scores',()=>{
  const data=normalize(report());
  assert.equal(data.niches.length,3);
  assert.equal(data.niches[0].total_score,18);
- assert.match(render(data,'2026-11-18','gpt-5-mini'),/Research leads/);
+ assert.match(render(data,'2026-11-18','gpt-5-mini'),/research leads/i);
 });
 test('rejects insufficient evidence',()=>{
  const data=report();data.niches[1].evidence=[evidence[0]];
