@@ -1,0 +1,39 @@
+name: OpenAI Opportunity Scout
+
+on:
+  schedule:
+    # 08:00 UTC Mondays (09:00 CET or 10:00 CEST). GitHub schedules are UTC.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: openai-opportunity-scout
+  cancel-in-progress: false
+
+jobs:
+  investigate:
+    # Defaults OFF until the owner explicitly approves API spending and enables the variable.
+    if: vars.OPENAI_SCOUT_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run offline validation
+        run: node --test operator/*.test.mjs
+      - name: Research niches and open a review issue
+        env:
+          OPENAI_SCOUT_ENABLED: ${{ vars.OPENAI_SCOUT_ENABLED }}
+          OPENAI_SCOUT_MODEL: ${{ vars.OPENAI_SCOUT_MODEL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node operator/opportunity-scout.mjs
