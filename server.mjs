@@ -3,6 +3,7 @@ import {readFile} from 'node:fs/promises';
 import {extname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {publicConfig} from './config.mjs';
+import {renderDoorTest} from './door-test-meta.mjs';
 import {deliver,sameSecret} from './email.mjs';
 const assets=JSON.parse(await readFile(new URL('./assets.json',import.meta.url),'utf8'));
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
@@ -11,7 +12,8 @@ export async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  const json=(value,status=200)=>{res.writeHead(status,{'Content-Type':'application/json'});res.end(req.method==='HEAD'?undefined:JSON.stringify(value));};
  try{
-  const path=new URL(req.url,'https://thewtlst.com').pathname;
+  const requestUrl=new URL(req.url,'https://www.thewtlst.com');
+  const path=requestUrl.pathname;
   if(path==='/api/send-emails'||path==='/api/cron/emails'){
    const cron=path==='/api/cron/emails';
    if(req.method!==(cron?'GET':'POST'))return json({error:'Method not allowed'},405);
@@ -23,11 +25,11 @@ export async function handler(req,res){
   if(req.method!=='GET'&&req.method!=='HEAD')return json({error:'Method not allowed'},405);
   if(path==='/the-test'||path==='/the-test/'){
    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
-   return res.end(req.method==='HEAD'?undefined:await readFile(new URL('./the-test.html',import.meta.url),'utf8'));
+   return res.end(req.method==='HEAD'?undefined:renderDoorTest(await readFile(new URL('./the-test.html',import.meta.url),'utf8'),requestUrl.searchParams.get('result')));
   }
   if(path==='/sitemap.xml'){
    res.writeHead(200,{'Content-Type':'application/xml; charset=utf-8','Cache-Control':'public, max-age=3600'});
-   return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://thewtlst.com/</loc></url><url><loc>https://thewtlst.com/the-test</loc></url></urlset>');
+   return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://www.thewtlst.com/</loc></url><url><loc>https://www.thewtlst.com/the-test</loc></url></urlset>');
   }
   if(path==='/api/config')return json(publicConfig());
   if(path==='/robots.txt'){res.writeHead(200,{'Content-Type':'text/plain'});return res.end('User-agent: *\nDisallow: /api/\n');}
