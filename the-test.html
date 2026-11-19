@@ -92,7 +92,7 @@
       var btn=document.createElement("button");btn.type="button";btn.className="choice";
       var letter=document.createElement("span");letter.className="letter";letter.textContent=String.fromCharCode(65+i);
       var t=document.createElement("span");t.textContent=option[0];btn.append(letter,t);
-      btn.addEventListener("click",function(){answers[current]=option[1];current++;if(current===questions.length)showResult(pickResult());else showQuestion();});
+      btn.addEventListener("click",function(){answers[current]=option[1];current++;if(current===questions.length){showResult(pickResult());window.wtlstAnalytics?.track('door_test_completed');}else showQuestion();});
       choices.appendChild(btn);
     });
     document.getElementById("back").textContent=current===0?"Back to beginning":"Previous question";
@@ -111,7 +111,7 @@
     document.getElementById("result-name").setAttribute("tabindex","-1");document.getElementById("result-name").focus({preventScroll:true});
     var url=new URL(window.location.href);url.searchParams.set("result",id);window.history.replaceState(null,"",url.pathname+url.search);
   }
-  document.getElementById("start").addEventListener("click",function(){answers=[];current=0;showQuestion();});
+  document.getElementById("start").addEventListener("click",function(){answers=[];current=0;window.wtlstAnalytics?.track("door_test_started");showQuestion();});
   document.getElementById("back").addEventListener("click",function(){if(current>0){current--;showQuestion();}else show(intro);});
   document.getElementById("restart").addEventListener("click",function(){answers=[];current=0;window.history.replaceState(null,"",window.location.pathname);showQuestion();});
   document.getElementById("share").addEventListener("click",async function(){
