@@ -19,7 +19,7 @@ test('eight unique, substantial, actionable, internally linked field notes',()=>
   assert.ok(html.includes('application/ld+json'));
   assert.ok(html.includes('Take the Door Test'));
   assert.ok(html.includes('/?view=apply&amp;from=outside'));
-  assert.ok(html.includes('Admission isn't guaranteed'));
+  assert.ok(html.includes("Admission isn't guaranteed"));
   assert.ok(html.includes('Questions people ask'));
   assert.ok(!html.includes('<meta name="robots" content="noindex'));
  }
