@@ -70,7 +70,7 @@ function decide(value){
  render();
 }
 panel.addEventListener('click',function(e){const btn=e.target.closest('button[data-choice]');if(btn)decide(btn.dataset.choice);});
-preferences.addEventListener('click',function(){choice='unset';render();panel.querySelector('button.wtlst-allow').focus();});
+preferences.addEventListener('click',function(){panel.hidden=false;preferences.hidden=true;panel.querySelector('button.wtlst-allow').focus();});
 document.body.append(panel,preferences);
 choice=readChoice();render();if(choice==='allow')initAnalytics();
 window.wtlstAnalytics=Object.freeze({track:send});
