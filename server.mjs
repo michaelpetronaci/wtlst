@@ -32,7 +32,7 @@ export async function handler(req,res){
    return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://www.thewtlst.com/</loc></url><url><loc>https://www.thewtlst.com/the-test</loc></url></urlset>');
   }
   if(path==='/api/config')return json(publicConfig());
-  if(path==='/robots.txt'){res.writeHead(200,{'Content-Type':'text/plain'});return res.end('User-agent: *\nDisallow: /api/\n');}
+  if(path==='/robots.txt'){res.writeHead(200,{'Content-Type':'text/plain'});return res.end('User-agent: *\nDisallow: /api/\nSitemap: https://www.thewtlst.com/sitemap.xml\n');}
   const key=path==='/'?'/index.html':decodeURIComponent(path);
   if(!Object.hasOwn(assets,key))return json({error:'Not found'},404);
   res.setHeader('Content-Type',types[extname(key)]||'application/octet-stream');

@@ -12,6 +12,8 @@ test('four results have distinct server-side titles and social previews',()=>{
   assert.ok(page.includes('content="'+meta.description+'"'));
   assert.ok(page.includes('name="twitter:title"'));
   assert.ok(page.includes('name="twitter:description"'));
+  assert.equal((page.match(/name="twitter:title"/g)||[]).length,1);
+  assert.equal((page.match(/name="twitter:description"/g)||[]).length,1);
   assert.ok(page.includes('href="https://www.thewtlst.com/the-test"'));
   assert.ok(page.includes('id="share"'));
   titles.add(meta.title);
