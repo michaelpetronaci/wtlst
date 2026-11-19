@@ -33,5 +33,5 @@ test('app bundle contains contextual application copy only when arriving from th
 
 test('patch fails closed if application markers change',()=>{
   assert.throws(()=>patchDoorFlow({'/index.html':'no frontend','/assets/a.js':'something'}),/Expected exactly one frontend application anchor/);
-  assert.throws(()=>patchDoorFlow(assets),/Already patched/);
+  assert.throws(()=>patchDoorFlow(assets),/Expected exactly one frontend application anchor/);
 });
