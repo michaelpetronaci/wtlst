@@ -35,6 +35,7 @@ export function renderDoorTest(html, resultId) {
   html = substitute(html, '<meta property="og:title" content="Would you let yourself in? — The Door Test">', tag('og:title',title));
   html = substitute(html, '<meta property="og:description" content="Three choices. One uncomfortable answer. Find out what kind of person you\'d invite.">', tag('og:description',description));
   html = substitute(html, '<meta property="og:url" content="https://www.thewtlst.com/the-test">', tag('og:url',socialUrl));
-  html = substitute(html, '<meta name="twitter:card" content="summary">', tag('twitter:card','summary','name')+'\n'+tag('twitter:title',title,'name')+'\n'+tag('twitter:description',description,'name'));
+  html = substitute(html, '<meta name="twitter:title" content="Would you let yourself in? — The Door Test">', tag('twitter:title',title,'name'));
+  html = substitute(html, '<meta name="twitter:description" content="Three choices. One uncomfortable answer. Find out who you would invite.">', tag('twitter:description',description,'name'));
   return html;
 }
