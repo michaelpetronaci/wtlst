@@ -1,0 +1,31 @@
+name: GA4 Consent & Funnel Checks
+on:
+  pull_request:
+    paths:
+      - 'analytics.mjs'
+      - 'analytics-client.js'
+      - 'analytics.test.mjs'
+      - 'assets.json'
+      - 'server.mjs'
+      - 'the-test.html'
+      - 'vercel.json'
+      - '.github/workflows/analytics-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax checks
+        run: |
+          node --check analytics.mjs
+          node --check analytics-client.js
+          node --check server.mjs
+      - name: Consent, privacy, journey tests
+        run: node --test analytics.test.mjs door-test-meta.test.mjs operator/door-flow-patch.test.mjs outside.test.mjs
