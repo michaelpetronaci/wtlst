@@ -7,6 +7,9 @@ on:
       - 'server.mjs'
       - 'the-test.html'
       - 'vercel.json'
+      - 'assets.json'
+      - 'operator/door-flow-patch.mjs'
+      - 'operator/door-flow-patch.test.mjs'
       - '.github/workflows/door-test-ci.yml'
   workflow_dispatch:
 permissions:
@@ -21,4 +24,6 @@ jobs:
         with:
           node-version: 22
       - run: node --check server.mjs
-      - run: node --test door-test-meta.test.mjs
+      - run: node --test door-test-meta.test.mjs operator/door-flow-patch.test.mjs
+      - name: Verify compiled frontend bundle syntax
+        run: node --input-type=module --check < <(node --input-type=module -e "import fs from 'node:fs';const o=JSON.parse(fs.readFileSync('assets.json','utf8'));process.stdout.write(o[Object.keys(o).find(k=>k.endsWith('.js'))]);")
