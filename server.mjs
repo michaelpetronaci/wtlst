@@ -4,6 +4,7 @@ import {extname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {publicConfig} from './config.mjs';
 import {renderDoorTest} from './door-test-meta.mjs';
+import {outsideIndex,outsideArticle,outsideSitemapUrls} from './outside.mjs';
 import {deliver,sameSecret} from './email.mjs';
 const assets=JSON.parse(await readFile(new URL('./assets.json',import.meta.url),'utf8'));
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
@@ -27,9 +28,22 @@ export async function handler(req,res){
    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
    return res.end(req.method==='HEAD'?undefined:renderDoorTest(await readFile(new URL('./the-test.html',import.meta.url),'utf8'),requestUrl.searchParams.get('result')));
   }
+  if(path==='/outside'||path==='/outside/'){
+   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
+   return res.end(req.method==='HEAD'?undefined:outsideIndex());
+  }
+  if(path.startsWith('/outside/')){
+   const match=/^\/outside\/([a-z0-9-]+)\/?$/.exec(path);
+   const page=match?outsideArticle(match[1]):null;
+   if(!page)return json({error:'Not found'},404);
+   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
+   return res.end(req.method==='HEAD'?undefined:page);
+  }
   if(path==='/sitemap.xml'){
    res.writeHead(200,{'Content-Type':'application/xml; charset=utf-8','Cache-Control':'public, max-age=3600'});
-   return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://www.thewtlst.com/</loc></url><url><loc>https://www.thewtlst.com/the-test</loc></url></urlset>');
+   const paths=['/','/the-test',...outsideSitemapUrls()];
+   const urls=paths.map(p=>'<url><loc>https://www.thewtlst.com'+p+'</loc></url>').join('');
+   return res.end(req.method==='HEAD'?undefined:'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+urls+'</urlset>');
   }
   if(path==='/api/config')return json(publicConfig());
   if(path==='/robots.txt'){res.writeHead(200,{'Content-Type':'text/plain'});return res.end('User-agent: *\nDisallow: /api/\nSitemap: https://www.thewtlst.com/sitemap.xml\n');}
