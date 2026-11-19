@@ -8,7 +8,8 @@
       "config": {
         "includeFiles": [
           "assets.json",
-          "the-test.html"
+          "the-test.html",
+          "analytics-client.js"
         ],
         "maxDuration": 120
       }

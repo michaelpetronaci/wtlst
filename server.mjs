@@ -6,6 +6,7 @@ import {publicConfig} from './config.mjs';
 import {renderDoorTest} from './door-test-meta.mjs';
 import {outsideIndex,outsideArticle,outsideSitemapUrls} from './outside.mjs';
 import {deliver,sameSecret} from './email.mjs';
+import {withAnalytics} from './analytics.mjs';
 const assets=JSON.parse(await readFile(new URL('./assets.json',import.meta.url),'utf8'));
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
 export async function handler(req,res){
@@ -24,20 +25,24 @@ export async function handler(req,res){
    const result=await deliver({token,cron});return json(result.body,result.status);
   }
   if(req.method!=='GET'&&req.method!=='HEAD')return json({error:'Method not allowed'},405);
+  if(path==='/analytics-client.js'){
+   res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'public, max-age=3600'});
+   return res.end(req.method==='HEAD'?undefined:await readFile(new URL('./analytics-client.js',import.meta.url),'utf8'));
+  }
   if(path==='/the-test'||path==='/the-test/'){
    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
-   return res.end(req.method==='HEAD'?undefined:renderDoorTest(await readFile(new URL('./the-test.html',import.meta.url),'utf8'),requestUrl.searchParams.get('result')));
+   return res.end(req.method==='HEAD'?undefined:withAnalytics(renderDoorTest(await readFile(new URL('./the-test.html',import.meta.url),'utf8'),requestUrl.searchParams.get('result'))));
   }
   if(path==='/outside'||path==='/outside/'){
    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
-   return res.end(req.method==='HEAD'?undefined:outsideIndex());
+   return res.end(req.method==='HEAD'?undefined:withAnalytics(outsideIndex()));
   }
   if(path.startsWith('/outside/')){
    const match=/^\/outside\/([a-z0-9-]+)\/?$/.exec(path);
    const page=match?outsideArticle(match[1]):null;
    if(!page)return json({error:'Not found'},404);
    res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=0, must-revalidate'});
-   return res.end(req.method==='HEAD'?undefined:page);
+   return res.end(req.method==='HEAD'?undefined:withAnalytics(page));
   }
   if(path==='/sitemap.xml'){
    res.writeHead(200,{'Content-Type':'application/xml; charset=utf-8','Cache-Control':'public, max-age=3600'});
@@ -51,7 +56,7 @@ export async function handler(req,res){
   if(!Object.hasOwn(assets,key))return json({error:'Not found'},404);
   res.setHeader('Content-Type',types[extname(key)]||'application/octet-stream');
   res.setHeader('Cache-Control',key.startsWith('/assets/')?'public, max-age=31536000, immutable':'no-cache');
-  res.end(req.method==='HEAD'?undefined:assets[key]);
+  res.end(req.method==='HEAD'?undefined:(key==='/index.html'?withAnalytics(assets[key]):assets[key]));
  }catch(error){console.error('WTLST request failed:',error.message.replace(/sb_(secret|publishable)_[\w-]+/g,'[redacted]'));json({error:'Service temporarily unavailable. Please try again shortly.'},503);}
 }
 export default handler;
