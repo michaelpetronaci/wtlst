@@ -123,5 +123,71 @@ export const fieldNotes=[
     ],
     faqs:[['How do you start a conversation at a networking event?','Ask what brought someone to that particular event or what they have been thinking about lately.'],['What can you say instead of “What do you do?”','Try “What are you learning?” “What is something you have changed your mind about?” or “What brought you to this room?”']],
     sources:[['CDC: Improving Social Connectedness','https://www.cdc.gov/social-connectedness/improving/index.html']]
-  }
+  },
+  {
+  "slug": "how-to-find-a-recurring-dinner-group",
+  "title": "How to Find a Recurring Dinner Group (Not Just a One-Off Supper Club)",
+  "description": "Find a dinner group where familiar faces return, compare membership formats, and ask the right questions before booking your first meal.",
+  "intro": "If your goal is friendship rather than another interesting meal, look for a dinner group that makes it possible to see the same people again. A weekly event is not necessarily a weekly group: the guest list may change completely.",
+  "sections": [
+    {
+      "h": "Choose the kind of repetition you want",
+      "p": [
+        "A fixed dinner circle meets with roughly the same guests. A rotating supper club mixes regulars and newcomers. A matching service assembles tables for individual bookings, sometimes allowing you to invite people you met previously. None is inherently better; decide whether you want familiarity, variety or both.",
+        "For example, Timeleft describes recurring events with newly matched tables and an option to invite existing connections. That is different from joining a standing monthly dinner circle."
+      ]
+    },
+    {
+      "h": "Search for the group, not only the event",
+      "p": [
+        "Try your city or neighborhood with phrases such as monthly dinner club, recurring potluck, community supper or dinner circle accepting new members. Look at community-center calendars, independent food newsletters and local event listings. Check past dates and whether a future date is announced.",
+        "A beautiful photograph of one dinner tells you little about whether the group still exists. Look for a consistent organizer and recent activity."
+      ]
+    },
+    {
+      "h": "Ask these questions before paying",
+      "p": [
+        "Ask whether regulars return, whether newcomers can attend alone, how the next dinner is arranged, and whether there is a membership fee in addition to food. Confirm the venue, dietary accommodations, cancellation terms and whether the host shares contact information.",
+        "A useful message is: ‘I’m looking for a regular dinner group rather than a one-off event. Do guests tend to return, and is there a way to join the next gathering if the first goes well?’"
+      ]
+    },
+    {
+      "h": "Try two dinners before committing",
+      "p": [
+        "Choose a public venue for your first visit if possible. Set a budget that includes the meal and any booking fee. At the first dinner, ask about the next date and notice whether the host includes newcomers in conversation.",
+        "If you enjoy the group, return and see whether anyone remembers you. If everyone changes each time, ask whether there is an opt-in way to reconnect with people you enjoyed meeting. Avoid sharing another guest’s details without permission."
+      ]
+    },
+    {
+      "h": "Where WTLST fits",
+      "p": [
+        "WTLST is a free-to-apply selective-membership experiment, not a directory of local dinner groups or a promise of a seat at a gathering. Its Door Test explores whom you would choose to invite into a room. Try it as a way to think about the company you value."
+      ]
+    }
+  ],
+  "faqs": [
+    [
+      "Can I join a recurring dinner group alone?",
+      "Many groups welcome solo guests, but confirm the organizer’s policy before booking."
+    ],
+    [
+      "Is a weekly supper club always the same group?",
+      "No. Ask whether the guest list is fixed, rotating or newly matched for each event."
+    ],
+    [
+      "Should I pay for a membership before attending?",
+      "Check whether a trial event is available and understand fees, cancellation terms and what membership actually includes."
+    ]
+  ],
+  "sources": [
+    [
+      "Timeleft: How it works",
+      "https://timeleft.com/how-it-works/"
+    ],
+    [
+      "Axios: Philadelphia dinner gatherings",
+      "https://www.axios.com/local/philadelphia/2024/08/30/timeleft-app-dinner-make-friends-philly"
+    ]
+  ]
+}
 ];
