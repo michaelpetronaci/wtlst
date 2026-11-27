@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {fieldNotes} from './outside-content.mjs';
 import {outsideIndex,outsideArticle,outsideSitemapUrls} from './outside.mjs';
 
-test('eight unique, substantial, actionable, internally linked field notes',()=>{
- assert.equal(fieldNotes.length,8);
+test('nine unique, substantial, actionable, internally linked field notes',()=>{
+ assert.equal(fieldNotes.length,9);
  assert.equal(new Set(fieldNotes.map(x=>x.slug)).size,fieldNotes.length);
  for(const note of fieldNotes){
   assert.match(note.slug,/^[a-z0-9-]+$/);
@@ -37,7 +37,7 @@ test('nonexistent article does not manufacture content',()=>{
 });
 test('every new article and hub is discoverable in sitemap',()=>{
  const urls=outsideSitemapUrls();
- assert.equal(urls.length,9);
+ assert.equal(urls.length,10);
  assert.equal(urls[0],'/outside');
  for(const note of fieldNotes)assert.ok(urls.includes('/outside/'+note.slug));
 });
